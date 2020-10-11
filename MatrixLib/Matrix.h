@@ -142,7 +142,7 @@ inline TMatrix<ValType> TMatrix<ValType>::operator-(const TMatrix<ValType>& mt)
     throw "Oshibka";
   }
 
-  TMatrix<ValType> temp(size);
+  TMatrix<ValType> temp(this->size);
   for (int i = 0; i < this->size; i++)
   {
     temp.pVector[i] = temp.pVector[i] - mt.pVector[i];
@@ -153,7 +153,7 @@ inline TMatrix<ValType> TMatrix<ValType>::operator-(const TMatrix<ValType>& mt)
 template<class ValType>
 inline TMatrix<ValType> TMatrix<ValType>::operator*(const TMatrix& mt)
 {
-  TMatrix<ValType> temp(size);
+  TMatrix<ValType> temp(this->size);
   for (int i = 0; i < this->size; i++)
   {
     temp.pVector[i] = temp.pVector[i] * mt.pVector[i];
