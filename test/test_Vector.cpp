@@ -98,8 +98,12 @@ TEST(TVector, can_assign_vectors_of_different_size)
 
 TEST(TVector, compare_equal_vectors_return_true)
 {
-  TVector<int> T1(10);
-  TVector<int> T2(10);
+  TVector<int> T1(2);
+  T1[0] = 2;
+  T1[1] = 4;
+  TVector<int> T2(2);
+  T2[0] = 2;
+  T2[1] = 4;
 
   EXPECT_EQ(T1 == T2, true);
 }
