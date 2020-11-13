@@ -7,96 +7,71 @@ using namespace std;
 
 const int MAX_VECTOR_SIZE = 100000;
 
-//Ўаблон вектора
+//°аблон вектора
 template <class ValType>
 class TVector
 {
 protected:
   ValType* pVector;
-  int size;
+  int Size;
+  int StartIndex;
 public:
-  TVector();
-  TVector(int _v);
-  TVector(int s, int si);
-  TVector(const TVector& v);                // конструктор копировани€
+  TVector(int s = 10, int si = 0);
+  TVector(const TVector& v);                // конструктор копировани§
   virtual ~TVector();
 
-  int GetSize() { return size; } // размер вектора
-
+  int GetSize() { return Size; } // размер вектора
+  int GetStartIndex() { return StartIndex; } //їндекс первого элемента
   ValType& operator[](int pos);             // доступ
   bool operator==(const TVector& v) const;  // сравнение
   TVector& operator=(const TVector& v);     // присваивание
 
-  // скал€рные операции
-  TVector  operator+(const ValType& val);   // прибавить скал€р
-  TVector  operator-(const ValType& val);   // вычесть скал€р
-  TVector  operator*(const ValType& val);   // умножить на скал€р
-  TVector  operator/(const ValType& val);   //делить на скал€р
+  // скал§рные операции
+  TVector  operator+(const ValType& val);   // прибавить скал§р
+  TVector  operator-(const ValType& val);   // вычесть скал§р
+  TVector  operator*(const ValType& val);   // умножить на скал§р
+  TVector  operator/(const ValType& val);   //делить на скал§р
 
   // векторные операции
   TVector  operator+(const TVector& v);     // сложение
   TVector  operator-(const TVector& v);     // вычитание
-  TVector  operator*(const TVector& v);     // скал€рное произведение
+  TVector  operator*(const TVector& v);     // скал§рное произведение
 
    // ввод-вывод
   friend istream& operator>>(istream& in, TVector& v)
   {
-    for (int i = 0; i < v.size; i++)
+    for (int i = 0; i < v.Size; i++)
       in >> v.pVector[i];
     return in;
   }
   friend ostream& operator<<(ostream& out, const TVector& v)
   {
-    for (int i = 0; i < v.size; i++)
+    for (int i = 0; i < v.Size; i++)
       out << v.pVector[i] << ' ';
     return out;
   }
 };
 
-template<class ValType>
-inline TVector<ValType>::TVector()
-{
-  size = 0;
-}
-
-template<class ValType>
-TVector<ValType>::TVector(int v)
-{
-  if (v < 0 || v > MAX_VECTOR_SIZE)
-  {
-    throw "Oshibka";
-  }
-
-  size = v;
-  pVector = new ValType[size];
-  for (int i = 0; i < size; i++)
-  {
-    pVector[i] = v;
-  }
-}
-
 template <class ValType>
 TVector<ValType>::TVector(int s, int si)
 {
-  if (si < 0)
+  if (s < 0 || s > MAX_VECTOR_SIZE || si < 0)
   {
-    throw "Oshibka";
+    throw "Error";
   }
-  size = s;
-  pVector = new ValType[size];
-
-  for (int i = 0; i < size; i++)
-  {
-    pVector[i] = si;
-  }
+  pVector = new ValType[s];
+  Size = s;
+  StartIndex = si;
 }
 
 template <class ValType> //конструктор копировани€
 TVector<ValType>::TVector(const TVector<ValType>& v)
 {
-  size = v.size;
-  pVector = new ValType[size];
-  for (int i = 0; i < size; i++)
+  pVector = new ValType[v.Size];
+  Size = v.Size;
+  StartIndex = v.StartIndex;
+
+  for (int i = 0; i < Size; i++)
   {
     pVector[i] = v.pVector[i];
   }
@@ -110,42 +85,36 @@ TVector<ValType>::~TVector()
     delete[] pVector;
   }
   pVector = 0;
+  Size = 0;
+  StartIndex = 0;
 }
 
 template <class ValType> // доступ
 ValType& TVector<ValType>::operator[](int index)
 {
-  if (index < 0 || index > size)
+  if (index < 0 || index > Size)
   {
-    throw "Oshibka";
+    throw "Error";
   }
-
-  if ((index >= 0) && (index < size))
-  {
-    return pVector[index];
-  }
-
-  return pVector[0];
+  return pVector[index - StartIndex];
 }
 
 template <class ValType> // сравнение
 bool TVector<ValType>::operator==(const TVector& v) const
 {
   bool res = true;
-
-  if (size != v.size)
+  if (Size != v.Size)
   {
     res = false;
   }
 
-  for (int i = 0; i < size; i++)
+  for (int i = 0; i < Size; i++)
   {
     if (pVector[i] != v.pVector[i])
     {
       res = false;
     }
   }
-
   return res;
 }
 
@@ -157,9 +126,18 @@ TVector<ValType>& TVector<ValType>::operator=(const TVector& v)
     return *this;
   }
 
-  size = v.size;
-  pVector = new ValType[size];
-  for (int i = 0; i < size; i++)
+  if (Size != v.Size)
+  {
+    if (pVector != NULL)
+    {
+      delete[] pVector;
+    }
+    pVector = new ValType[v.Size];
+  }
+
+  Size = v.Size;
+  StartIndex = v.StartIndex;
+  for (int i = 0; i < Size; i++)
   {
     pVector[i] = v.pVector[i];
   }
@@ -170,10 +148,10 @@ template <class ValType> // прибавить скал€р
 TVector<ValType> TVector<ValType>::operator+(const ValType& val)
 {
   TVector<ValType> res;
-  res.size = size;
-  res.pVector = new ValType[res.size];
+  res.Size = Size;
+  res.pVector = new ValType[res.Size];
 
-  for (int i = 0; i < res.size; i++)
+  for (int i = 0; i < res.Size; i++)
   {
     res.pVector[i] = pVector[i] + val;
   }
@@ -184,24 +162,24 @@ template <class ValType> // вычесть скал€р
 TVector<ValType> TVector<ValType>::operator-(const ValType& val)
 {
   TVector<ValType> res;
-  res.size = size;
-  res.pVector = new ValType[res.size];
+  res.Size = Size;
+  res.pVector = new ValType[res.Size];
 
-  for (int i = 0; i < res.size; i++)
+  for (int i = 0; i < res.Size; i++)
   {
     res.pVector[i] = pVector[i] - val;
   }
   return res;
 }
 
-template <class ValType> // умножить на скал€р
+template <class ValType> // умножить на скал§р
 TVector<ValType> TVector<ValType>::operator*(const ValType& val)
 {
   TVector<ValType> res;
-  res.size = size;
-  res.pVector = new ValType[res.size];
+  res.Size = Size;
+  res.pVector = new ValType[res.Size];
 
-  for (int i = 0; i < res.size; i++)
+  for (int i = 0; i < res.Size; i++)
   {
     res.pVector[i] = pVector[i] * val;
   }
@@ -212,10 +190,10 @@ template<class ValType>
 inline TVector<ValType> TVector<ValType>::operator/(const ValType& val)
 {
   TVector<ValType> res;
-  res.size = size;
-  res.pVector = new ValType[res.size];
+  res.Size = Size;
+  res.pVector = new ValType[res.Size];
 
-  for (int i = 0; i < res.size; i++)
+  for (int i = 0; i < res.Size; i++)
   {
     res.pVector[i] = pVector[i] / val;
   }
@@ -225,14 +203,14 @@ inline TVector<ValType> TVector<ValType>::operator/(const ValType& val)
 template <class ValType> // сложение
 TVector<ValType> TVector<ValType>::operator+(const TVector<ValType>& v)
 {
-  if (v.size != size)
+  if (v.Size != Size)
   {
-    throw "Oshibka";
+    throw "Error";
   }
   TVector<ValType> res;
-  res.size = size;
-  res.pVector = new ValType[res.size];
-  for (int i = 0; i < res.size; i++)
+  res.Size = Size;
+  res.pVector = new ValType[res.Size];
+  for (int i = 0; i < res.Size; i++)
   {
     res.pVector[i] = pVector[i] + v.pVector[i];
   }
@@ -242,31 +220,31 @@ TVector<ValType> TVector<ValType>::operator+(const TVector<ValType>& v)
 template <class ValType> // вычитание
 TVector<ValType> TVector<ValType>::operator-(const TVector<ValType>& v)
 {
-  if (v.size != size)
+  if (v.Size != Size)
   {
-    throw "Oshibka";
+    throw "Error";
   }
   TVector<ValType> res;
-  res.size = size;
-  res.pVector = new ValType[res.size];
-  for (int i = 0; i < res.size; i++)
+  res.Size = Size;
+  res.pVector = new ValType[res.Size];
+  for (int i = 0; i < res.Size; i++)
   {
     res.pVector[i] = pVector[i] - v.pVector[i];
   }
   return res;
 }
 
-template <class ValType> // скал€рное произведение
+template <class ValType> // скал§рное произведение
 TVector<ValType> TVector<ValType> ::operator*(const TVector<ValType>& v)
 {
-  if (v.size != size)
+  if (v.Size != Size)
   {
-    throw "Oshibka";
+    throw "Error";
   }
   TVector<ValType> res;
-  res.size = size;
-  res.pVector = new ValType[res.size];
-  for (int i = 0; i < res.size; i++)
+  res.Size = Size;
+  res.pVector = new ValType[res.Size];
+  for (int i = 0; i < res.Size; i++)
   {
     res.pVector[i] = pVector[i] * v.pVector[i];
   }

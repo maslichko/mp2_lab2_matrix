@@ -121,32 +121,48 @@ TEST(TVector, vectors_with_different_size_are_not_equal)
 
 TEST(TVector, can_add_scalar_to_vector)
 {
-  TVector<int> T1(2, 4);
-  TVector<int> res(2, 6);
+  TVector<int> T1(2);
+  T1[0] = 2;
+  T1[1] = 4;
+  TVector<int> res(2);
+  res[0] = 4;
+  res[1] = 6;
 
   EXPECT_EQ(T1 + 2, res);
 }
 
 TEST(TVector, can_subtract_scalar_from_vector)
 {
-  TVector<int> T1(2, 4);
-  TVector<int> res(2, 2);
+  TVector<int> T1(2);
+  T1[0] = 4;
+  T1[1] = 6;
+  TVector<int> res(2);
+  res[0] = 2;
+  res[1] = 4;
 
   EXPECT_EQ(T1 - 2, res);
 }
 
 TEST(TVector, can_multiply_scalar_by_vector)
 {
-  TVector<int> T1(2, 4);
-  TVector<int> res(2, 8);
+  TVector<int> T1(2);
+  T1[0] = 4;
+  T1[1] = 6;
+  TVector<int> res(2);
+  res[0] = 8;
+  res[1] = 12;
 
   EXPECT_EQ(T1 * 2, res);
 }
 
 TEST(TVector, can_divide_scalar_by_vector)
 {
-  TVector<int> T1(2, 6);
-  TVector<int> res(2, 3);
+  TVector<int> T1(2);
+  T1[0] = 4;
+  T1[1] = 6;
+  TVector<int> res(2);
+  res[0] = 2;
+  res[1] = 3;
 
   EXPECT_EQ(T1 / 2, res);
 }

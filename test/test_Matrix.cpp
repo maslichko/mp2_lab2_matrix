@@ -102,8 +102,8 @@ TEST(TMatrix, compare_matrix_with_itself_return_true)
 
 TEST(TMatrix, matrices_with_different_size_are_not_equal)
 {
-  TMatrix<int> A(10);
-  TMatrix<int> B(5);
+  TMatrix<int> A(5);
+  TMatrix<int> B(10);
 
   EXPECT_EQ(A == B, false);
 }
@@ -119,17 +119,14 @@ TEST(TMatrix, assign_operator_change_matrix_size)
 
 TEST(TMatrix, can_add_matrices_with_equal_size)
 {
-  TMatrix<int> A(5);
-  TMatrix<int> B(5);
+  TMatrix<int> A(1);
+  A[0][0] = 10;
+  TMatrix<int> B(1);
+  B[0][0] = 20;
 
-  TMatrix<int> res(5);
-  for (int i = 0; i < res.GetSize(); i++)
-  {
-    for (int j = 0; j < res.GetSize(); j++)
-    {
-      res[i][j] = 10;
-    }
-  }
+  TMatrix<int> res(1);
+  res[0][0] = 30;
+
 
   EXPECT_EQ(A + B, res);
 }
@@ -144,25 +141,40 @@ TEST(TMatrix, cant_add_matrices_with_not_equal_size)
 
 TEST(TMatrix, can_subtract_matrices_with_equal_size)
 {
-  TMatrix<int> A(5);
-  TMatrix<int> B(5);
+  TMatrix<int> A(1);
+  A[0][0] = 20;
+  TMatrix<int> B(1);
+  B[0][0] = 10;
 
-  TMatrix<int> res(5);
-  for (int i = 0; i < res.GetSize(); i++)
-  {
-    for (int j = 0; j < res.GetSize(); j++)
-    {
-      res[i][j] = 0;
-    }
-  }
+  TMatrix<int> result(1);
+  result[0][0] = 10;
 
-  EXPECT_EQ(A - B, res);
+  EXPECT_EQ(A - B, result);
 }
 
 TEST(TMatrix, cant_subtract_matrixes_with_not_equal_size)
 {
-  TMatrix<int> A(5);
-  TMatrix<int> B(6);
+  TMatrix<int> A(3);
+  TMatrix<int> B(2);
 
   ASSERT_ANY_THROW(A - B);
+}
+
+TEST(TMatrix, can_multiply_matrices_with_equal_size)
+{
+  TMatrix<int> A(1);
+  A[0][0] = 2;
+  TMatrix<int> B(1);
+  B[0][0] = 5;
+  TMatrix<int> res(1);
+  res[0][0] = 10;
+  EXPECT_EQ(A * B, res);
+}
+
+TEST(TMatrix, cant_multiply_matrixes_with_not_equal_size)
+{
+  TMatrix<int> A(1);
+  TMatrix<int> B(2);
+
+  ASSERT_ANY_THROW(A * B);
 }
