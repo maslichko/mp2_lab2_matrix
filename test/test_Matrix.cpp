@@ -162,12 +162,18 @@ TEST(TMatrix, cant_subtract_matrixes_with_not_equal_size)
 
 TEST(TMatrix, can_multiply_matrices_with_equal_size)
 {
-  TMatrix<int> A(1);
+  TMatrix<int> A(2);
   A[0][0] = 2;
-  TMatrix<int> B(1);
+  A[0][1] = 2;
+  A[1][0] = 2;
+  TMatrix<int> B(2);
   B[0][0] = 5;
-  TMatrix<int> res(1);
+  B[0][1] = 5;
+  B[1][0] = 5;
+  TMatrix<int> res(2);
   res[0][0] = 10;
+  res[0][1] = 10;
+  res[1][0] = 10;
   EXPECT_EQ(A * B, res);
 }
 
