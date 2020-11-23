@@ -172,7 +172,7 @@ TEST(TMatrix, can_multiply_matrices_with_equal_size)
   B[1][0] = 5;
   TMatrix<int> res(2);
   res[0][0] = 10;
-  res[0][1] = 10;
+  res[0][1] = 20;
   res[1][0] = 10;
   EXPECT_EQ(A * B, res);
 }
